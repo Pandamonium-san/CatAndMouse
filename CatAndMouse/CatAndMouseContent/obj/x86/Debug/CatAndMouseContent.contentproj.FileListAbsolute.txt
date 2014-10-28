@@ -1,0 +1,1 @@
+C:\Henrik\XNA\CatAndMouse\CatAndMouse\CatAndMouseContent\obj\x86\Debug\CatAndMouseContent.contentprojResolveAssemblyReference.cache
