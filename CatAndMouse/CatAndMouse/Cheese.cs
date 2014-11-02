@@ -15,7 +15,7 @@ namespace CatAndMouse
             scale = 0.7f;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime, Tile[,] tiles)
         {
         }
 

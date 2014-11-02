@@ -10,10 +10,16 @@ namespace CatAndMouse
     {
         public static StreamReader sr;
         public static List<String> mapData;
+        public static String test = @"Content\test.txt";
+        public static String lvl1 = @"Content\lvl1.txt";
+        public static String lvl2 = @"Content\lvl2.txt";
+        public static String lvl3 = @"Content\lvl3.txt";
 
-        public static List<String> GetMapFromText(String relativeMapLocation)
+        public static List<String> GetMapFromText(String mapPath)
         {
-            sr = new StreamReader(relativeMapLocation);
+            if (!File.Exists(mapPath))
+                return null;
+            sr = new StreamReader(mapPath);
             mapData = new List<String>();
             while (!sr.EndOfStream)
             {
@@ -24,36 +30,37 @@ namespace CatAndMouse
             return mapData;
         }
 
-        public static void CreateMapFile(List<String> mapData, string path)
-        {
-            File.WriteAllLines(path, mapData);
-        }
-
-        public static void SaveMapToText(Tile[,] tiles)
+        public static void SaveMapToText(Tile[,] tiles, string path)
         {
             mapData = new List<String>();
-            for (int i = 0; i < tiles.GetLength(1); i++)
+            for (int i = 0; i < tiles.GetLength(0); i++)
             {
                 String currentLine = "";
-                for (int j = 0; j < tiles.GetLength(0); j++)
+                for (int j = 0; j < tiles.GetLength(1); j++)
                 {
-                    if (tiles[j, i].type == Tile.TileType.wall)
+                    if (tiles[i, j].type == Tile.TileType.wall)
                         currentLine += "W";
-                    else if (tiles[j, i].type == Tile.TileType.floor)
+                    else if (tiles[i, j].type == Tile.TileType.floor)
                         currentLine += "_";
-                    else if (tiles[j, i].type == Tile.TileType.cat)
+                    else if (tiles[i, j].type == Tile.TileType.dumbcat)
                         currentLine += "E";
-                    else if (tiles[j, i].type == Tile.TileType.cheese)
+                    else if (tiles[i, j].type == Tile.TileType.cheese)
                         currentLine += "C";
-                    else if (tiles[j, i].type == Tile.TileType.mouse)
+                    else if (tiles[i, j].type == Tile.TileType.mouse)
                         currentLine += "M";
-                    if(j==tiles.GetLength(0)-1)
+                    else if (tiles[i, j].type == Tile.TileType.smartcat)
+                        currentLine += "S";
+                    else if (tiles[i, j].type == Tile.TileType.intelligentcat)
+                        currentLine += "I";
+                    else if (tiles[i, j].type == Tile.TileType.geniuscat)
+                        currentLine += "G";
+                    if(j==tiles.GetLength(1)-1)
                     {
                         mapData.Add(currentLine);
                     }
                 }
             }
-            File.WriteAllLines(@"Content\test.txt", mapData);
+            File.WriteAllLines(path, mapData);
         }
 
 

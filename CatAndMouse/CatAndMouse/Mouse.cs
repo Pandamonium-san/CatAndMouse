@@ -10,62 +10,58 @@ namespace CatAndMouse
 {
     class Mouse:GameObject
     {
+        public Vector2 startingPos;
+
+        public bool invulnerable;
+        public double invulnerableTime, invulnerableInterval = 2000;
 
         public Mouse(Texture2D texture, Vector2 pos) : base(texture, pos)
         {
-            hitbox = new Rectangle((int)pos.X, (int)pos.Y, spriteRec.Width, spriteRec.Height);
             offset = 10;
-
-            speed = 4; //tileSize must be a multiple of speed
-            maxMoveTime = ObjectManager.tileSize/speed;
+            startingPos = pos;
+            speed = 3;
+            maxMoveTime = Tile.tileSize/speed;
 
             frameWidth = 32;
             frameHeight = 32;
-            frameInterval = 10;
+            frameInterval = 120;
             spriteRec = new Rectangle(0, 0, frameWidth, frameHeight);
             vectorOrigin = new Vector2(spriteRec.Width / 2, spriteRec.Height / 2);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime, Tile[,] tiles)
         {
             if (!moving)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                {
-                    direction = Direction.Down;
-                    if(down)
-                        Move(Direction.Down);
-                }
+                    Move(Direction.Down);
                 else if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                {
-                    direction = Direction.Left;
-                    if (left)
                     Move(Direction.Left);
-                }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                {
-                    direction = Direction.Right;
-                    if (right)
                     Move(Direction.Right);
-                }
                 else if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                {
-                    direction = Direction.Up;
-                    if (up)
                     Move(Direction.Up);
+            }
+
+            if(invulnerable)
+            {
+                color = Color.CornflowerBlue * 0.8f;
+                invulnerableTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (invulnerableTime >= invulnerableInterval)
+                {
+                    invulnerable = false;
+                    invulnerableTime = 0;
+                    color = Color.White;
                 }
             }
 
-            base.Update();
+            base.Update(gameTime, tiles);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteRec = new Rectangle(1 + frameWidth * frame, 1 + frameHeight * (int)direction, frameWidth, frameHeight);
-
+            spriteRec = new Rectangle(1 + frameWidth * frame, 1 + frameHeight * (int)spriteDirection, frameWidth, frameHeight);
             base.Draw(spriteBatch);
-            //spriteBatch.Draw(texture, hitbox, Color.Red);
         }
-
     }
 }

@@ -16,16 +16,22 @@ namespace CatAndMouse
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        ObjectManager objectManager;
         MapEditor mapEditor;
+        Menu menu;
 
-        enum GameState { Title, Playing, GameOver, Options, MapEditor }
+        public static Texture2D colorTexture;
+        public static SpriteFont font, titleFont, hudFont;
+        public static Random rnd = new Random();
+
+        enum GameState { Title, Playing, GameOver, MapEditor, Paused }
         GameState gameState;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             this.Window.Title = "something";
             IsMouseVisible = true;
             Content.RootDirectory = "Content";
@@ -40,28 +46,38 @@ namespace CatAndMouse
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            ObjectManager.LoadContent(Content);
-            ObjectManager.Initialize();
-            graphics.PreferredBackBufferWidth = (ObjectManager.mapData[0].Length-4) * 32;
-            graphics.PreferredBackBufferHeight = (ObjectManager.mapData.Count-4) * 32;
-            graphics.ApplyChanges();
+            font = Content.Load<SpriteFont>(@"font1");
+            titleFont = Content.Load<SpriteFont>(@"titlefont");
+            hudFont = Content.Load<SpriteFont>(@"hudfont");
 
+            objectManager = new ObjectManager();
+            menu = new Menu(Window);
+            objectManager.LoadContent(Content);
+
+            colorTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            colorTexture.SetData<Color>(new Color[] { Color.White });
+
+            gameState = GameState.Title;
+        }
+
+        protected void StartMap(string path)
+        {
+            objectManager.Start(path);
+
+            graphics.PreferredBackBufferWidth = objectManager.mapRec.Width;
+            graphics.PreferredBackBufferHeight = objectManager.mapRec.Height;
+            graphics.ApplyChanges();
+            gameState = GameState.Playing;
+        }
+
+        protected void EditMap(string mapPath)
+        {
+            mapEditor = new MapEditor(25, 20);
+            mapEditor.LoadMap(mapPath);
+            graphics.PreferredBackBufferWidth = mapEditor.mapRec.Width;
+            graphics.PreferredBackBufferHeight = mapEditor.mapRec.Height + 2 * 32;
+            graphics.ApplyChanges();
             gameState = GameState.MapEditor;
-            StartMapEditor(25,25);
-
-        }
-
-        protected override void UnloadContent()
-        {
-        }
-
-        protected void StartMapEditor(int x, int y)
-        {
-            mapEditor = new MapEditor(x,y);
-
-            graphics.PreferredBackBufferWidth = (x-4) * 32;
-            graphics.PreferredBackBufferHeight = (y-4) * 32;
-            graphics.ApplyChanges();
         }
 
         protected override void Update(GameTime gameTime)
@@ -69,22 +85,66 @@ namespace CatAndMouse
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
             KeyMouseReader.Update();
+            menu.FindCenter(Window);
             switch(gameState)
             { 
                 case GameState.Title:
-
+                    menu.Update();
+                    if (menu.play)
+                    {
+                        StartMap(menu.currentMap);
+                        menu.play = false;
+                    }
+                    if(menu.editing)
+                    {
+                        EditMap(menu.currentMap);
+                        menu.editing = false;
+                    }
+                    if (menu.exit.ButtonClicked() && menu.screen == Menu.Screen.title)
+                        this.Exit();
                     break;
                 case GameState.Playing:
-                    ObjectManager.Update();
+                    objectManager.Update(gameTime);
+                    if (objectManager.hud.pauseButton.ButtonClicked())
+                    {
+                        menu.LoadPauseScreen();
+                        gameState = GameState.Paused;
+                    }
+                    if (objectManager.victory)
+                    {
+                        menu.LoadVictoryScreen();
+                        gameState = GameState.Title;
+                    }
+                    if (objectManager.lose)
+                    {
+                        menu.LoadGameOverScreen();
+                        gameState = GameState.Title;
+                    }
+                    break;
+                case GameState.GameOver:
+                    menu.Update();
+                    if (menu.play)
+                    {
+                        StartMap(menu.currentMap);
+                        menu.play = false;
+                    }
+                    break;
+                case GameState.Paused:
+                    menu.Update();
+                    if (menu.playButton.ButtonClicked())
+                        gameState = GameState.Playing;
+                    if (menu.back.ButtonClicked())
+                        gameState = GameState.Title;
                     break;
                 case GameState.MapEditor:
-                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    mapEditor.Update(Window);
+                    if (KeyMouseReader.KeyPressed(Keys.Enter) || mapEditor.hud.save.ButtonClicked())
                     {
-                        MapHandler.SaveMapToText(mapEditor.tiles);
-                        ObjectManager.Initialize();
-                        gameState = GameState.Playing;
+                        MapHandler.SaveMapToText(mapEditor.tiles, menu.currentMap);
+                        menu.Update();
+                        menu.LoadTitleScreen();
+                        gameState = GameState.Title;
                     }
-                    mapEditor.Update();
                     break;
             }
 
@@ -92,18 +152,25 @@ namespace CatAndMouse
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             switch (gameState)
             {
                 case GameState.Title:
-
+                    menu.Draw(spriteBatch);
                     break;
                 case GameState.Playing:
-                    ObjectManager.Draw(spriteBatch);
+                    objectManager.Draw(spriteBatch);
                     break;
                 case GameState.MapEditor:
                     mapEditor.Draw(spriteBatch);
+                    break;
+                case GameState.GameOver:
+                    menu.Draw(spriteBatch);
+                    break;
+                case GameState.Paused:
+                    objectManager.Draw(spriteBatch);
+                    menu.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();

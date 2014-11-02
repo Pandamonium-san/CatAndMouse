@@ -11,59 +11,104 @@ namespace CatAndMouse
     class MapEditor
     {
         public Tile[,] tiles;
+        public EditorHUD hud;
 
-        Rectangle spriteRec = new Rectangle(0, 0, 32, 32);
-        int tileSize, mapOffset;
+        Rectangle defaultRec = new Rectangle(0, 0, 32, 32);
+        public Rectangle mapRec;
+        int mapOffset;
         int arrayX, arrayY;
+        enum Place { Mouse, DumbCat, SmartCat, IntelligentCat, GeniusCat, Cheese, Wall, Floor }
+        Place placeTool = Place.Wall;
 
         public MapEditor(int x, int y)
         {
-            arrayX = x + 3;
-            arrayY = y + 3;
-            tileSize = 32;
-            mapOffset = tileSize * 2;   
+            arrayY = x;
+            arrayX = y;
+            mapOffset = Tile.tileSize * 2;
             tiles = new Tile[arrayX, arrayY];
             for (int i = 0; i < arrayX; i++)
             {
                 for (int j = 0; j < arrayY; j++)
                 {
-                    tiles[j, i] = new WallTile(ObjectManager.tileTexture, new Vector2(j * tileSize - mapOffset, i * tileSize - mapOffset));
+                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset));
                 }
             }
         }
 
-        public void Update()
+        public void LoadMap(String mapPath)
         {
-  
-            for (int i = 0; i < arrayX; i++)
-			{
-                for (int j = 0; j < arrayY; j++)
+            List<String> mapData = MapHandler.GetMapFromText(mapPath);
+            if (mapData == null)
+            {
+                return;
+            }
+            tiles = new Tile[mapData.Count, mapData[0].Length];
+
+            for (int i = 0; i < mapData.Count; i++)
+            {
+                for (int j = 0; j < mapData[i].Length; j++)
                 {
-                    if (tiles[i, j].hitbox.Contains(KeyMouseReader.LeftClickPos))
+                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset));
+                    if (mapData[i][j] == 'W')
+                        tiles[i, j].type = Tile.TileType.wall;
+                    else if (mapData[i][j] == '_')
+                        tiles[i, j].type = Tile.TileType.floor;
+                    else if (mapData[i][j] == 'C')
                     {
-                        if (tiles[i, j].tileID < 4)
-                            ++tiles[i, j].tileID;
-                        else
-                            tiles[i, j].tileID = 0;
-                        switch (tiles[i, j].tileID)
-                        {
-                            case 0:
-                                tiles[i, j].type = Tile.TileType.wall;
-                                break;
-                            case 1:
-                                tiles[i, j].type = Tile.TileType.floor;
-                                break;
-                            case 2:
-                                tiles[i, j].type = Tile.TileType.cat;
-                                break;
-                            case 3:
-                                tiles[i, j].type = Tile.TileType.cheese;
-                                break;
-                            case 4:
-                                tiles[i, j].type = Tile.TileType.mouse;
-                                break;
-                        }
+                        tiles[i, j].type = Tile.TileType.cheese;
                     }
+                    else if (mapData[i][j] == 'M')
+                    {
+                        tiles[i, j].type = Tile.TileType.mouse;
+                    }
+                    else if (mapData[i][j] == 'E')
+                    {
+                        tiles[i, j].type = Tile.TileType.dumbcat;
+                    }
+                    else if (mapData[i][j] == 'S')
+                    {
+                        tiles[i, j].type = Tile.TileType.smartcat;
+                    }
+                    else if (mapData[i][j] == 'I')
+                    {
+                        tiles[i, j].type = Tile.TileType.intelligentcat;
+                    }
+                    else if (mapData[i][j] == 'G')
+                    {
+                        tiles[i, j].type = Tile.TileType.geniuscat;
+                    }
+                }
+            }
+            mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
+            hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
+        }
+
+        public void Update(GameWindow window)
+        {
+            hud.Update();
+            foreach(EditorButton b in hud.buttons)
+            {
+                if (b.ButtonClicked())
+                    placeTool = (Place)b.type;
+            }
+            if (KeyMouseReader.KeyPressed(Keys.Q))
+            {
+                ++placeTool;
+                if ((int)placeTool == 8)
+                    placeTool = Place.Mouse;
+            }
+            if (KeyMouseReader.KeyPressed(Keys.W))
+            {
+                --placeTool;
+                if ((int)placeTool == -1)
+                    placeTool = Place.Floor;
+            }
+
+            foreach (Tile tile in tiles)
+            {
+                if (tile.hitbox.Contains(KeyMouseReader.mousePos) && KeyMouseReader.mouseState.LeftButton == ButtonState.Pressed && mapRec.Contains(KeyMouseReader.mousePos))
+                {
+                    tile.type = (Tile.TileType)placeTool;
                 }
             }
         }
@@ -72,24 +117,34 @@ namespace CatAndMouse
         {
             foreach (Tile t in tiles)
             {
-                spriteBatch.Draw(ObjectManager.tileTexture, t.pos, new Rectangle(32, 0, 32, 32), Color.White);
+                spriteBatch.Draw(ObjectManager.tileTexture, t.pos, new Rectangle(32, 0, 32, 32), Color.White);  //Draw floor texture first, then draw stuff over it if needed
                 switch(t.type)
                 {
                     case Tile.TileType.wall:
-                        spriteBatch.Draw(ObjectManager.tileTexture, t.pos, spriteRec, Color.White);
+                        spriteBatch.Draw(ObjectManager.tileTexture, t.pos, defaultRec, Color.White);
                         break;
                     case Tile.TileType.mouse:
-                        spriteBatch.Draw(ObjectManager.mouseTexture, t.pos, spriteRec, Color.White);
-                        break;
-                    case Tile.TileType.cat:
-                        spriteBatch.Draw(ObjectManager.catTexture, t.pos, spriteRec, Color.White);
+                        spriteBatch.Draw(ObjectManager.mouseTexture, t.pos, defaultRec, Color.White);
                         break;
                     case Tile.TileType.cheese:
-                        spriteBatch.Draw(ObjectManager.cheeseTexture, t.pos + new Vector2(5,5), spriteRec, Color.White, 0f, Vector2.Zero, 0.7f,SpriteEffects.None, 0f);
+                        spriteBatch.Draw(ObjectManager.cheeseTexture, t.pos + new Vector2(5,5), defaultRec, Color.White, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
+                        break;
+                    case Tile.TileType.dumbcat:
+                        spriteBatch.Draw(ObjectManager.catTexture, t.pos, new Rectangle(0, 128, 32, 32), Color.White);
+                        break;
+                    case Tile.TileType.smartcat:
+                        spriteBatch.Draw(ObjectManager.catTexture, t.pos, new Rectangle(0, 0, 32, 32), Color.White);
+                        break;
+                    case Tile.TileType.intelligentcat:
+                        spriteBatch.Draw(ObjectManager.catTexture, t.pos, new Rectangle(128, 0, 32, 32), Color.White);
+                        break;
+                    case Tile.TileType.geniuscat:
+                        spriteBatch.Draw(ObjectManager.catTexture, t.pos, new Rectangle(128, 128, 32, 32), Color.White);
                         break;
                 }
             }
-
+            spriteBatch.DrawString(Game1.font, placeTool.ToString(), Vector2.Zero, Color.White);
+            hud.Draw(spriteBatch);
         }
     }
 }

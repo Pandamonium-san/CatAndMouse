@@ -10,104 +10,172 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CatAndMouse
 {
-    static class ObjectManager
+    class ObjectManager
     {
         public static Texture2D tileTexture, mouseTexture, catTexture, cheeseTexture;
-        public static List<String> mapData;
-        public static Tile[,] tiles;
-        public static int tileSize = 32;
-        public static int mapOffset = tileSize * 2; //Adds two layers of tiles outside screen to avoid null error when checking valid directions
+        public static int mapOffset = Tile.tileSize * 2; //Adds two layers of tiles outside screen to avoid null error when checking valid directions
 
-        public static Mouse playerMouse;
-        public static List<Cat> cats;
-        public static List<Cheese> cheeseList;
+        public List<String> mapData;
+        public HUD hud;
+        public Tile[,] tiles;
+        public Rectangle mapRec;
 
-        public static void LoadContent(ContentManager Content)
+        public List<Mouse> playerMice;
+        public List<Cat> cats;
+        public List<Cheese> cheeseList;
+
+        public bool lose, victory;
+        public int playerLives;
+        public int cheeseEaten;
+
+        public void LoadContent(ContentManager Content)
         {
             tileTexture = Content.Load<Texture2D>(@"tileSpritesheet");
             mouseTexture = Content.Load<Texture2D>(@"mouse");
-            catTexture = Content.Load<Texture2D>(@"cat");
+            catTexture = Content.Load<Texture2D>(@"catsprites");
             cheeseTexture = Content.Load<Texture2D>(@"cheese");
         }
 
-        public static void Initialize()
+        public void Start(string mapPath)    //Initialize
         {
-            CreateMap(@"Content\test.txt");
-            playerMouse.CheckValidDirections();
+            CreateLevel(mapPath);
+            foreach (Mouse m in playerMice)
+            {
+                m.CheckValidDirections(tiles);
+            }
             foreach (Cat c in cats)
-                c.CheckValidDirections();
+                c.CheckValidDirections(tiles);
+
+            playerLives = 3;
+            cheeseEaten = 0;
+            lose = false;
+            victory = false;
         }
 
-        public static void CreateMap(String path)
+        public void CreateLevel(String path)     //Loads the level from path
         {
             mapData = MapHandler.GetMapFromText(path);
+            playerMice = new List<Mouse>();
             cats = new List<Cat>();
             cheeseList = new List<Cheese>();
-
             tiles = new Tile[mapData[0].Length,mapData.Count];
 
             for (int i = 0; i < mapData.Count; i++)
             {
                 for (int j = 0; j < mapData[i].Length; j++)
                 {
+                    Vector2 position = new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset);
+
                     if (mapData[i][j] == 'W')
-                        tiles[j,i] = new WallTile(tileTexture, new Vector2(j * tileSize-mapOffset, i * tileSize-mapOffset));
-                    else if (mapData[i][j] == '_')
-                        tiles[j,i] = new FloorTile(tileTexture, new Vector2(j * tileSize-mapOffset, i * tileSize-mapOffset));
+                        tiles[j, i] = new WallTile(tileTexture, position);
+                    else
+                    {
+                        tiles[j, i] = new FloorTile(tileTexture, position);
+                        position = new Vector2(j * Tile.tileSize - mapOffset + 16, i * Tile.tileSize - mapOffset + 16);
+                    }
+
+                    if (mapData[i][j] == '_')
+                        continue;
                     else if (mapData[i][j] == 'C')
                     {
-                        tiles[j, i] = new FloorTile(tileTexture, new Vector2(j * tileSize - mapOffset, i * tileSize - mapOffset));
-                        cheeseList.Add(new Cheese(cheeseTexture, new Vector2(j * tileSize - mapOffset + 16, i * tileSize - mapOffset + 16)));
+                        cheeseList.Add(new Cheese(cheeseTexture, position));
                     }
                     else if (mapData[i][j] == 'M')
                     {
-                        tiles[j, i] = new FloorTile(tileTexture, new Vector2(j * tileSize - mapOffset, i * tileSize - mapOffset));
-                        playerMouse = new Mouse(mouseTexture, new Vector2(j * tileSize - mapOffset + 16, i * tileSize - mapOffset + 16));
+                        playerMice.Add(new Mouse(mouseTexture, position));
                     }
                     else if (mapData[i][j] == 'E')
                     {
-                        tiles[j, i] = new FloorTile(tileTexture, new Vector2(j * tileSize - mapOffset, i * tileSize - mapOffset));
-                        cats.Add(new Cat(catTexture, new Vector2(j * tileSize - mapOffset + 16, i * tileSize - mapOffset + 16)));
+                        cats.Add(new DumbCat(catTexture, position));
+                    }
+                    else if (mapData[i][j] == 'S')
+                    {
+                        cats.Add(new SmartCat(catTexture, position));
+                    }
+                    else if (mapData[i][j] == 'I')
+                    {
+                        cats.Add(new IntelligentCat(catTexture, position));
+                    }
+                    else if (mapData[i][j] == 'G')
+                    {
+                        cats.Add(new GeniusCat(catTexture, position));
                     }
                 }
             }
+
+            mapRec = new Rectangle(0, 0, (tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
+            hud = new HUD((tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
+
+            foreach(Tile tile in tiles)
+            {
+                tile.CheckSetForkTile(mapData, tiles);
+            }
         }
 
-        public static void Update()
+        public List<Mouse> GetMouseList()
         {
-            playerMouse.Update();
+            return this.playerMice;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            hud.Update(cheeseEaten, playerLives, cheeseList.Count);
+            foreach (Mouse m in playerMice)
+            {
+                m.Update(gameTime, tiles);
+            }
+            for (int i = 0; i < cats.Count; i++)
+			{
+                if (cats[i] is SmartCat || cats[i] is IntelligentCat)
+                    cats[i].GetTargetList(playerMice);
+            }
             foreach (Cat cat in cats)
             {
-                cat.Update();
-                if (playerMouse.hitbox.Intersects(cat.hitbox))
-                    Initialize();
+                cat.Update(gameTime, tiles);
+                foreach(Mouse m in playerMice)
+                    if (m.hitbox.Intersects(cat.hitbox) && !m.invulnerable)
+                    {
+                        --playerLives;
+                        m.pos = m.startingPos;
+                        m.StopMoving(tiles);
+                        m.invulnerable = true;
+                    }
             }
             foreach(Cheese c in cheeseList)
             {
-                if (playerMouse.hitbox.Intersects(c.hitbox))
+                foreach (Mouse m in playerMice)
+                if (m.hitbox.Intersects(c.hitbox))
                 {
                     cheeseList.Remove(c);
-                    break;
+                    ++cheeseEaten;
+                    return;
                 }
             }
+            if (playerLives <= 0)
+                lose = true;
+            if (cheeseList.Count <= 0)
+                victory = true;
         }
 
-        public static void Draw(SpriteBatch spritebatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             foreach (Tile t in tiles)
             {
-                t.Draw(spritebatch);
+                t.Draw(spriteBatch);
             }
             foreach(Cheese c in cheeseList)
             {
-                c.Draw(spritebatch);
+                c.Draw(spriteBatch);
             }
             foreach(Cat cat in cats)
             {
-                cat.Draw(spritebatch);
+                cat.Draw(spriteBatch);
             }
-            playerMouse.Draw(spritebatch);
-
+            foreach (Mouse m in playerMice)
+            {
+                m.Draw(spriteBatch);
+            }
+            hud.Draw(spriteBatch);
         }
 
     }

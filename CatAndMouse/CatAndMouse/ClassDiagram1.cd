@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CatAndMouse.Button" Collapsed="true">
+    <Position X="7.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAAAAAAAAgAAAAIAAIAAAAAAAACAAAAQAAAAAgA=</HashCode>
+      <FileName>Button.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Cat" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAQAAAAAAAAgAgAQgAAAAAAwAAAAAAAAQAQBAAAAA=</HashCode>
+      <FileName>Cat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Cheese" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cheese.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.DumbCat" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>DumbCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.EditorButton" Collapsed="true">
+    <Position X="8.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAgAAAAAAAAABAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>EditorButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.EditorHUD" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAAACAAgAAICIIAEAAQAAAAAgAAAAGAAAAAAA=</HashCode>
+      <FileName>EditorHUD.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.FloorTile" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FloorTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Game1" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYEAGAAAAAAAwAAACAAEAgAAABAQCgAAQAgAAAAAAQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.GameObject" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAagABQCAKAAAgggAgAAAoQCAACASwCgAEAiAQEAgQA=</HashCode>
+      <FileName>GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.GeniusCat" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>GeniusCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.HUD" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAIAwAAAAIAAAAAAAAgAAgAACAAAAAAAAA=</HashCode>
+      <FileName>HUD.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.HUDObject" Collapsed="true">
+    <Position X="17.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAIAAAAAAACAIAAAAAAAAgAA=</HashCode>
+      <FileName>HUDObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.IntelligentCat" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAABAABAAAAAAAAAAAAAAAAAAAIAQAAAAAAAwAAA=</HashCode>
+      <FileName>IntelligentCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.MapEditor" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgCAAAAAgAAAggAAAEAAgAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>MapEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.MapHandler" Collapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAAAAAAAAAAAAAAAAAAACAAAAAAAgAIAAAAAMACAAA=</HashCode>
+      <FileName>MapHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Menu" Collapsed="true">
+    <Position X="17.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAAEAAEQQAoggIAAAABwABAKAAAIAAAAIQmABAAA=</HashCode>
+      <FileName>Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Mouse" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAAAgAAgAAAAAAgAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Mouse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.ObjectManager" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QUQAABgCAGIAAyAgAgAAAAAAAgAAAAAAAGAIAAAQAAQ=</HashCode>
+      <FileName>ObjectManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.PathFinder" Collapsed="true">
+    <Position X="14" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAgAAAAAAAAEBAAAAAgAAAAAAAAUAAAAAAAAACA=</HashCode>
+      <FileName>PathFinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Program" Collapsed="true">
+    <Position X="15.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.SmartCat" Collapsed="true">
+    <Position X="0.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SmartCat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.TextButton" Collapsed="true">
+    <Position X="6.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAgAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TextButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.Tile" Collapsed="true">
+    <Position X="1.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACRAABQAEQAAAgAAAgAAAIACAAABCgAAAAAAAAAAIQA=</HashCode>
+      <FileName>Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CatAndMouse.WallTile" Collapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WallTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KeyMouseReader" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBQCAAAAAAAAAAEAAAAAAAACAAAAAAAAAAAIAAHAAAA=</HashCode>
+      <FileName>KeyMouseReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

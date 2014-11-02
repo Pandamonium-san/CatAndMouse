@@ -9,7 +9,9 @@ static class KeyMouseReader
 {
 	public static KeyboardState keyState, oldKeyState = Keyboard.GetState();
 	public static MouseState mouseState, oldMouseState = Mouse.GetState();
+    public static Point mousePos = new Point(-100, -100);
     public static Point LeftClickPos = new Point(-100, -100);
+    public static Point RightClickPos = new Point(-100, -100);
 	public static bool KeyPressed(Keys key) {
 		return keyState.IsKeyDown(key) && oldKeyState.IsKeyUp(key);
 	}
@@ -26,10 +28,14 @@ static class KeyMouseReader
 		keyState = Keyboard.GetState();
 		oldMouseState = mouseState;
 		mouseState = Mouse.GetState();
+        mousePos = new Point(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
 
         LeftClickPos = new Point(-100, -100);         //Moves the mouseclick point outside the screen
         if (KeyMouseReader.LeftClick())
             LeftClickPos = new Point(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);   //Creates point at mouse location for collision test
+        RightClickPos = new Point(-100, -100);
+        if (KeyMouseReader.RightClick())
+            RightClickPos = new Point(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
 
         
 	}
