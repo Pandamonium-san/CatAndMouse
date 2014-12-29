@@ -25,7 +25,7 @@ namespace CatAndMouse
         protected double moveTime = 0;
         protected double maxMoveTime = 8;
 
-        public bool moving = false;
+        public bool moving = false, teleported = false;
         public bool upPossible, downPossible, leftPossible, rightPossible;
         public int gridPosX, gridPosY;
 
@@ -86,6 +86,7 @@ namespace CatAndMouse
         public virtual void StopMoving(Tile[,] tiles)
         {
             moving = false;
+            teleported = false;
             CheckValidDirections(tiles);
             moveTime = 0;
         }

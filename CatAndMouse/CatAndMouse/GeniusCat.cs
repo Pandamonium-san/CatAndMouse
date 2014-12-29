@@ -21,8 +21,8 @@ namespace CatAndMouse
         public override void FindPath(Tile[,] tiles)
         {
             playerMice[0].UpdateGridPos();
-            targetX = playerMice[0].gridPosX + (int)playerMice[0].dir.X;
-            targetY = playerMice[0].gridPosY + (int)playerMice[0].dir.Y;
+            targetX = playerMice[0].gridPosX;
+            targetY = playerMice[0].gridPosY;
             base.FindPath(tiles);
         }
     }

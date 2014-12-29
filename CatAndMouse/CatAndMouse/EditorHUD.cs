@@ -13,7 +13,7 @@ namespace CatAndMouse
         int hudHeight = 64;
 
         public List<EditorButton> buttons;
-        EditorButton mouse, dumbCat, smartCat, intelligentCat, geniusCat, cheese, wall, floor;
+        EditorButton mouse, dumbCat, smartCat, intelligentCat, geniusCat, cheese, wall, floor, teleporter;
         public TextButton save;
 
         public EditorHUD(int windowX, int windowY)
@@ -29,6 +29,7 @@ namespace CatAndMouse
             buttons.Add (cheese          = new EditorButton(ObjectManager.cheeseTexture, null,                               new Vector2(184, rec.Y + 32),   5));
             buttons.Add (wall            = new EditorButton(ObjectManager.tileTexture,   new Rectangle(0, 0, 32, 32),        new Vector2(216, rec.Y + 32),   6));
             buttons.Add (floor           = new EditorButton(ObjectManager.tileTexture,   new Rectangle(32, 0, 32, 32),       new Vector2(248, rec.Y + 32),   7));
+            buttons.Add (teleporter      = new EditorButton(ObjectManager.tileTexture,   new Rectangle(64, 0, 32, 32),       new Vector2(280, rec.Y + 32),   8));
 
             save = new TextButton(Game1.font, new Vector2(rec.Width - 50, rec.Y + 32), "Save");
         }

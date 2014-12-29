@@ -72,7 +72,7 @@ namespace CatAndMouse
 
         protected void EditMap(string mapPath)
         {
-            mapEditor = new MapEditor(25, 20);
+            mapEditor = new MapEditor(28, 31);
             mapEditor.LoadMap(mapPath);
             graphics.PreferredBackBufferWidth = mapEditor.mapRec.Width;
             graphics.PreferredBackBufferHeight = mapEditor.mapRec.Height + 2 * 32;

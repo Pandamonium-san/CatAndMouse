@@ -18,6 +18,7 @@ namespace CatAndMouse
         public List<String> mapData;
         public HUD hud;
         public Tile[,] tiles;
+        public List<Tile> teleporters;
         public Rectangle mapRec;
 
         public List<Mouse> playerMice;
@@ -27,6 +28,7 @@ namespace CatAndMouse
         public bool lose, victory;
         public int playerLives;
         public int cheeseEaten;
+
 
         public void LoadContent(ContentManager Content)
         {
@@ -58,7 +60,7 @@ namespace CatAndMouse
             playerMice = new List<Mouse>();
             cats = new List<Cat>();
             cheeseList = new List<Cheese>();
-            tiles = new Tile[mapData[0].Length,mapData.Count];
+            tiles = new Tile[mapData[0].Length, mapData.Count];
 
             for (int i = 0; i < mapData.Count; i++)
             {
@@ -68,6 +70,10 @@ namespace CatAndMouse
 
                     if (mapData[i][j] == 'W')
                         tiles[j, i] = new WallTile(tileTexture, position);
+                    else if (mapData[i][j] == 'T')
+                    {
+                        tiles[j, i] = new TeleporterTile(tileTexture, position);
+                    }
                     else
                     {
                         tiles[j, i] = new FloorTile(tileTexture, position);
@@ -103,10 +109,22 @@ namespace CatAndMouse
                 }
             }
 
+            teleporters = new List<Tile>();
+            foreach (Tile tile in tiles)
+            {
+                if (!(tile is TeleporterTile))
+                    continue;
+                teleporters.Add(tile);
+            }
+            for (int i = 0; i < teleporters.Count; i++)
+            {
+                teleporters[i].teleporterId = i;
+            }
+
             mapRec = new Rectangle(0, 0, (tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
             hud = new HUD((tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
 
-            foreach(Tile tile in tiles)
+            foreach (Tile tile in tiles)
             {
                 tile.CheckSetForkTile(mapData, tiles);
             }
@@ -117,12 +135,30 @@ namespace CatAndMouse
             return this.playerMice;
         }
 
+        public void TeleportUpdate(GameObject go)
+        {
+            int targetID = 0;
+            foreach (TeleporterTile tp in teleporters)
+            {
+                if (tp.hitbox.Contains(go.hitbox) && !go.teleported)
+                {
+                    targetID = tp.teleporterId + 1;
+                    if (targetID > teleporters.Count - 1)
+                        targetID = 0;
+                    go.pos = teleporters[targetID].pos;
+                    go.StopMoving(tiles);
+                    go.teleported = true;
+                }
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
             hud.Update(cheeseEaten, playerLives, cheeseList.Count);
             foreach (Mouse m in playerMice)
             {
                 m.Update(gameTime, tiles);
+                TeleportUpdate(m);
             }
             for (int i = 0; i < cats.Count; i++)
 			{
@@ -132,6 +168,7 @@ namespace CatAndMouse
             foreach (Cat cat in cats)
             {
                 cat.Update(gameTime, tiles);
+                TeleportUpdate(cat);
                 foreach(Mouse m in playerMice)
                     if (m.hitbox.Intersects(cat.hitbox) && !m.invulnerable)
                     {

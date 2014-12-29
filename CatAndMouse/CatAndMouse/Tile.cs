@@ -15,9 +15,10 @@ namespace CatAndMouse
         public Vector2 pos;
         public Rectangle spriteRec;
         public Rectangle hitbox;
+        public int teleporterId;
 
         //Editor variables
-        public enum TileType { mouse, dumbcat, smartcat, intelligentcat, geniuscat, cheese, wall, floor }
+        public enum TileType { mouse, dumbcat, smartcat, intelligentcat, geniuscat, cheese, wall, floor, teleporter }
         public Nullable<TileType> type = TileType.wall;
 
 
@@ -34,6 +35,7 @@ namespace CatAndMouse
         {
             this.texture = texture;
             this.pos = pos;
+            hitbox = new Rectangle((int)pos.X, (int)pos.Y, 32, 32);
             UpdateGridPos();
         }
 
@@ -45,16 +47,16 @@ namespace CatAndMouse
 
             //DRAW PATHFINDER PATH
             //if (pDir == PDir.down)
-            //    spriteBatch.DrawString(Game1.hudFont, "v", pos + toleft + new Vector2(12, 16), Color.Red);
+            //    spriteBatch.DrawString(Game1.hudFont, "v", pos + new Vector2(12, 16), Color.Red);
 
             //else if (pDir == PDir.right)
-            //    spriteBatch.DrawString(Game1.hudFont, ">", pos + toleft + new Vector2(20, 8), Color.Red);
+            //    spriteBatch.DrawString(Game1.hudFont, ">", pos + new Vector2(20, 8), Color.Red);
 
             //else if (pDir == PDir.left)
-            //    spriteBatch.DrawString(Game1.hudFont, "<", pos + toleft + new Vector2(4, 8), Color.Red);
+            //    spriteBatch.DrawString(Game1.hudFont, "<", pos + new Vector2(4, 8), Color.Red);
 
             //else if (pDir == PDir.up)
-            //    spriteBatch.DrawString(Game1.hudFont, "^", pos + toleft + new Vector2(12, 0), Color.Red);
+            //    spriteBatch.DrawString(Game1.hudFont, "^", pos + new Vector2(12, 0), Color.Red);
         }
 
         public void UpdateGridPos()

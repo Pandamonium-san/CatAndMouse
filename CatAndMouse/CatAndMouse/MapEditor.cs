@@ -17,13 +17,13 @@ namespace CatAndMouse
         public Rectangle mapRec;
         int mapOffset;
         int arrayX, arrayY;
-        enum Place { Mouse, DumbCat, SmartCat, IntelligentCat, GeniusCat, Cheese, Wall, Floor }
+        enum Place { Mouse, DumbCat, SmartCat, IntelligentCat, GeniusCat, Cheese, Wall, Floor, Teleporter }
         Place placeTool = Place.Wall;
 
         public MapEditor(int x, int y)
         {
-            arrayY = x;
-            arrayX = y;
+            arrayY = x + 4; //Adding extra tiles for HUD & off-screen trickery. May help avoid null error
+            arrayX = y + 4;
             mapOffset = Tile.tileSize * 2;
             tiles = new Tile[arrayX, arrayY];
             for (int i = 0; i < arrayX; i++)
@@ -38,10 +38,14 @@ namespace CatAndMouse
         public void LoadMap(String mapPath)
         {
             List<String> mapData = MapHandler.GetMapFromText(mapPath);
+
             if (mapData == null)
             {
+                mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
+                hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
                 return;
             }
+
             tiles = new Tile[mapData.Count, mapData[0].Length];
 
             for (int i = 0; i < mapData.Count; i++)
@@ -77,6 +81,10 @@ namespace CatAndMouse
                     {
                         tiles[i, j].type = Tile.TileType.geniuscat;
                     }
+                    else if (mapData[i][j] == 'T')
+                    {
+                        tiles[i, j].type = Tile.TileType.teleporter;
+                    }
                 }
             }
             mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
@@ -91,17 +99,17 @@ namespace CatAndMouse
                 if (b.ButtonClicked())
                     placeTool = (Place)b.type;
             }
-            if (KeyMouseReader.KeyPressed(Keys.Q))
-            {
-                ++placeTool;
-                if ((int)placeTool == 8)
-                    placeTool = Place.Mouse;
-            }
             if (KeyMouseReader.KeyPressed(Keys.W))
             {
+                ++placeTool;
+                if ((int)placeTool > 8)
+                    placeTool = (Place)0;
+            }
+            if (KeyMouseReader.KeyPressed(Keys.Q))
+            {
                 --placeTool;
-                if ((int)placeTool == -1)
-                    placeTool = Place.Floor;
+                if ((int)placeTool < 0)
+                    placeTool = (Place)9;
             }
 
             foreach (Tile tile in tiles)
@@ -122,6 +130,9 @@ namespace CatAndMouse
                 {
                     case Tile.TileType.wall:
                         spriteBatch.Draw(ObjectManager.tileTexture, t.pos, defaultRec, Color.White);
+                        break;
+                    case Tile.TileType.teleporter:
+                        spriteBatch.Draw(ObjectManager.tileTexture, t.pos, new Rectangle(64,0,32,32), Color.White);
                         break;
                     case Tile.TileType.mouse:
                         spriteBatch.Draw(ObjectManager.mouseTexture, t.pos, defaultRec, Color.White);

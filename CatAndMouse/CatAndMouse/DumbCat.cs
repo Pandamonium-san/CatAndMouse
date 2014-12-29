@@ -13,6 +13,8 @@ namespace CatAndMouse
         {
             spriteOriginX = 0;
             spriteOriginY = 128;
+            this.speed = 3f;
+            maxMoveTime = Tile.tileSize / speed;
         }
 
         public override void Update(GameTime gameTime, Tile[,] tiles)

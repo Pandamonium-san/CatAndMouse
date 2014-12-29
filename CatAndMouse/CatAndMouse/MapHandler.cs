@@ -54,6 +54,8 @@ namespace CatAndMouse
                         currentLine += "I";
                     else if (tiles[i, j].type == Tile.TileType.geniuscat)
                         currentLine += "G";
+                    else if (tiles[i, j].type == Tile.TileType.teleporter)
+                        currentLine += "T";
                     if(j==tiles.GetLength(1)-1)
                     {
                         mapData.Add(currentLine);

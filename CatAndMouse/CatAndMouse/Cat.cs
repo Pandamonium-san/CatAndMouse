@@ -20,7 +20,7 @@ namespace CatAndMouse
             offset = 10;
             scale = 1f;
             speed = 2;
-            maxMoveTime = 16;
+            maxMoveTime = Tile.tileSize/speed;
             frameWidth = 32;
             frameHeight = 32;
             frameInterval = 150;
