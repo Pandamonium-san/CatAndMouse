@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace CatAndMouse
 {
-    class Mouse:GameObject
+    class Mouse:Actor
     {
         public Vector2 startingPos;
 
@@ -19,7 +19,7 @@ namespace CatAndMouse
         {
             offset = 10;
             startingPos = pos;
-            speed = 7.3f;
+            speed = 2.5f;
             maxMoveTime = Tile.tileSize/speed;
 
             frameWidth = 32;

@@ -9,15 +9,10 @@ namespace CatAndMouse
 {
     class Cheese:GameObject
     {
-
         public Cheese(Texture2D texture, Vector2 pos):base(texture, pos)
         {
-            scale = 0.7f;
+            this.vectorOrigin = new Vector2(spriteRec.Width / 2, spriteRec.Height / 2);
+            this.scale = 0.5f;
         }
-
-        public override void Update(GameTime gameTime, Tile[,] tiles)
-        {
-        }
-
     }
 }

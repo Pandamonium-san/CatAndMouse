@@ -13,7 +13,7 @@ namespace CatAndMouse
         {
             spriteOriginX = 0;
             spriteOriginY = 128;
-            this.speed = 3f;
+            this.speed = 2.3f;
             maxMoveTime = Tile.tileSize / speed;
         }
 

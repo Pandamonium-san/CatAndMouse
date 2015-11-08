@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
-    class Cat:GameObject
+    class Cat:Actor
     {
         protected List<Mouse> playerMice;
         protected List<Direction> possibleDirections;
@@ -19,7 +19,7 @@ namespace CatAndMouse
             hitbox = new Rectangle((int)pos.X, (int)pos.Y, spriteRec.Width, spriteRec.Height);
             offset = 10;
             scale = 1f;
-            speed = 2;
+            speed = 1.5f;
             maxMoveTime = Tile.tileSize/speed;
             frameWidth = 32;
             frameHeight = 32;

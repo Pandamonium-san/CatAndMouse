@@ -65,7 +65,31 @@ namespace CatAndMouse
             File.WriteAllLines(path, mapData);
         }
 
-
+        public static List<String> GenerateDefaultMap()
+        {
+            mapData = new List<String>();
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            mapData.Add("WWWCCCCCCCCCCCCCCCCCCSWWW");
+            mapData.Add("WWWGWWWWWCWWWWCWCWWWWCWWW");
+            mapData.Add("WWWCWWTWCCCCCWCWCCCCCCWWW");
+            mapData.Add("WWWCWWCWWCWWCWCWWCWWWCWWW");
+            mapData.Add("WWWCCCCWWCWWCWCWWTWCCCWWW");
+            mapData.Add("WWWCWWCCWCWWCCCWWWWCWWWWW");
+            mapData.Add("WWWCWWWCCMWWWWCCWCCCWCWWW");
+            mapData.Add("WWWCWTWWWCWWWWWCWWWCWCWWW");
+            mapData.Add("WWWCCCCWCCCWCCCCCCCCCCWWW");
+            mapData.Add("WWWCWCWWWWCWCWWWWCWWWCWWW");
+            mapData.Add("WWWCWCCCWWCCCCCCWCCCCCWWW");
+            mapData.Add("WWWCWWWCCWWWWWWCWWCWWCWWW");
+            mapData.Add("WWWCWWWWCWWWTWWCWWCWWCWWW");
+            mapData.Add("WWWECCCCCCCCCICCCCCCCCWWW");
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            mapData.Add("WWWWWWWWWWWWWWWWWWWWWWWWW");
+            return mapData;
+        }
 
     }
 }

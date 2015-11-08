@@ -54,9 +54,12 @@ namespace CatAndMouse
             victory = false;
         }
 
-        public void CreateLevel(String path)     //Loads the level from path
+        //Loads the level from path
+        public void CreateLevel(String path)
         {
             mapData = MapHandler.GetMapFromText(path);
+            if (mapData == null)
+                mapData = MapHandler.GenerateDefaultMap();
             playerMice = new List<Mouse>();
             cats = new List<Cat>();
             cheeseList = new List<Cheese>();
@@ -135,7 +138,8 @@ namespace CatAndMouse
             return this.playerMice;
         }
 
-        public void TeleportUpdate(GameObject go)
+        //Teleporter logic
+        public void TeleportUpdate(Actor go)
         {
             int targetID = 0;
             foreach (TeleporterTile tp in teleporters)

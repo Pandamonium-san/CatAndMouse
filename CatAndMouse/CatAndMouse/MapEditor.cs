@@ -22,8 +22,8 @@ namespace CatAndMouse
 
         public MapEditor(int x, int y)
         {
-            arrayY = x + 4; //Adding extra tiles for HUD & off-screen trickery. May help avoid null error
-            arrayX = y + 4;
+            arrayY = x; // + 4; Adding extra tiles for HUD & off-screen trickery. May help avoid null error. //Might not be neccessary
+            arrayX = y; // + 4;
             mapOffset = Tile.tileSize * 2;
             tiles = new Tile[arrayX, arrayY];
             for (int i = 0; i < arrayX; i++)
@@ -157,5 +157,6 @@ namespace CatAndMouse
             spriteBatch.DrawString(Game1.font, placeTool.ToString(), Vector2.Zero, Color.White);
             hud.Draw(spriteBatch);
         }
+
     }
 }
