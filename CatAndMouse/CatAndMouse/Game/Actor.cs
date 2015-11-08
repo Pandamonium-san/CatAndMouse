@@ -85,8 +85,8 @@ namespace CatAndMouse
             teleported = false;
             pos.X = (pos.X - pos.X % 32) + 16;    //Snap to grid to make sure objects stay aligned
             pos.Y = (pos.Y - pos.Y % 32) + 16;
-            CheckValidDirections(tiles);
             moveTime = 0;
+            CheckValidDirections(tiles);
         }
 
         public virtual void CheckValidDirections(Tile[,] tiles)

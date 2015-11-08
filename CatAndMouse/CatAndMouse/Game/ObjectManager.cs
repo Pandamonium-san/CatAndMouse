@@ -17,7 +17,7 @@ namespace CatAndMouse
         public List<String> mapData;
         public HUD hud;
         public Tile[,] tiles;
-        public List<Tile> teleporters;
+        public List<TeleporterTile> teleporters;
         public Rectangle mapRec;
 
         public List<Mouse> playerMice;
@@ -122,20 +122,23 @@ namespace CatAndMouse
                 }
             }
 
-            teleporters = new List<Tile>();
+            foreach (Cat c in cats)
+                c.SendTargetList(playerMice);
+
+            teleporters = new List<TeleporterTile>();
             foreach (Tile tile in tiles)
             {
                 if (!(tile is TeleporterTile))
                     continue;
-                teleporters.Add(tile);
+                teleporters.Add((TeleporterTile)tile);
             }
             for (int i = 0; i < teleporters.Count; i++)
             {
-                teleporters[i].teleporterId = i;
+                int nextID = i + 1;
+                if (nextID >= teleporters.Count())
+                    nextID = 0;
+                teleporters[i].SetExit(teleporters[nextID]);
             }
-
-            foreach (Cat c in cats)
-                c.SendTargetList(playerMice);
 
             mapRec = new Rectangle(0, 0, (tiles.GetLength(0)) * Tile.tileSize, (tiles.GetLength(1)) * Tile.tileSize);
             hud = new HUD(mapRec.Width, mapRec.Height + HUD.hudHeight);
@@ -144,22 +147,22 @@ namespace CatAndMouse
             {
                 tile.FindNeighbors(tiles);
             }
+            foreach(TeleporterTile tp in teleporters)
+            {
+                tp.AddExitToNeighbors();
+            }
         }
 
         //Teleporter logic
-        public void TeleportUpdate(Actor go)
+        public void TeleportUpdate(Actor a)
         {
-            int targetID = 0;
             foreach (TeleporterTile tp in teleporters)
             {
-                if (tp.hitbox.Contains(go.hitbox) && !go.teleported)
+                if (tp.hitbox.Contains(a.hitbox) && !a.teleported)
                 {
-                    targetID = tp.teleporterId + 1;
-                    if (targetID > teleporters.Count - 1)
-                        targetID = 0;
-                    go.pos = teleporters[targetID].pos;
-                    go.StopMoving(tiles);
-                    go.teleported = true;
+                    tp.Teleport(a);
+                    a.StopMoving(tiles);
+                    a.teleported = true;
                 }
             }
         }
@@ -180,12 +183,13 @@ namespace CatAndMouse
                 foreach(Mouse m in playerMice)
                     if (m.hitbox.Intersects(cat.hitbox) && !m.invulnerable)
                     {
-                        --playerLives;
+                        playerLives--;
                         m.pos = m.startingPos;
                         m.StopMoving(tiles);
                         m.invulnerable = true;
                     }
             }
+
             foreach(Cheese c in cheeseList)
             {
                 foreach (Mouse m in playerMice)
@@ -221,6 +225,18 @@ namespace CatAndMouse
                 m.Draw(spriteBatch);
             }
             hud.Draw(spriteBatch);
+
+            foreach (var n in tiles)  //Draw nodes
+            {
+                if (n.closed && n.parent != null)
+                {
+                    spriteBatch.Draw(Game1.colorTexture, n.hitbox, Color.Black*0.3f);
+                }
+                if (n.open)
+                    spriteBatch.Draw(Game1.colorTexture, n.hitbox, Color.White*0.3f);
+                if (PathFinder.currentTile != null)
+                    spriteBatch.Draw(Game1.colorTexture, PathFinder.currentTile.hitbox, Color.Red*0.3f);
+            }
         }
 
     }

@@ -10,6 +10,7 @@ namespace CatAndMouse
     class GeniusCat : SmartCat
     {
         protected int targetX, targetY;
+        protected TileStack path = null;
 
         public GeniusCat(Texture2D texture, Vector2 pos)
             : base(texture, pos)
@@ -27,7 +28,10 @@ namespace CatAndMouse
                 if (tiles[gridX, gridY].isForkTile)
                     FindPath(tiles);
                 else
-                    MoveRandomly();
+                {
+                    canReverseDirection = false;
+                    MoveTowardsTarget(playerMice);
+                }
             }
             base.Update(gameTime, tiles);
         }
@@ -38,23 +42,23 @@ namespace CatAndMouse
             targetY = playerMice[0].gridY;
         }
 
-        public void FindPath(Tile[,] tiles)
+        protected virtual void FindPath(Tile[,] tiles)
         {
+            canReverseDirection = true;
             playerMice[0].UpdateGridPos();
             SelectTarget();
-            TileStack path = null;
             if (ObjectManager.IndexIsNotOutOfRange(targetX, targetY, tiles))
                 path = PathFinder.FindPath(tiles[gridX, gridY], tiles[targetX, targetY], tiles);
-            if (path == null)
-                MoveTowardsTarget(playerMice);
-            else
-                FollowPath(path);
-            AvoidDirectionReversal();
-            PickDirection();
+            FollowPath(path);
         }
 
         protected void FollowPath(TileStack path)
         {
+            if (path == null || path.count == 0)
+            {
+                MoveTowardsTarget(playerMice);
+                return;
+            }
             Tile t = path.Pop();
             int X = t.gridX - gridX;
             int Y = t.gridY - gridY;
@@ -66,6 +70,9 @@ namespace CatAndMouse
                 possibleDirections.Add(Direction.Down);
             else if (Y == -1)
                 possibleDirections.Add(Direction.Up);
+
+            AvoidDirectionReversal();
+            PickDirection();
         }
     }
 }

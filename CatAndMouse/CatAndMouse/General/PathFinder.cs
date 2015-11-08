@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CatAndMouse
 {
-    public static class PathFinder
+    static class PathFinder
     {
         public static List<Tile> openList;
         public static Tile currentTile;
@@ -15,15 +15,40 @@ namespace CatAndMouse
 
         static float G;
 
-        public static TileStack FindPath(Tile startTile, Tile destinationTile, Tile[,] grid)
+        public static TileStack FindPath(Tile startTile, Tile destinationTile, Tile[,] tiles)
         {
             openList = new List<Tile>();
-            foreach (Tile n in grid)
+            foreach (Tile n in tiles)
                 n.ResetValues();
 
             targetTile = destinationTile;
             currentTile = startTile;
             currentTile.open = true;
+
+            for (int i = 0; i < maxIterations; i++)
+            {
+                AddAdjacentOpenTiles(currentTile);
+                currentTile = FindBestTile();
+                if (currentTile == destinationTile)
+                    return Path(startTile, destinationTile);
+                if (openList.Count <= 0)
+                    return null;
+            }
+            return null;
+        }
+
+        public static TileStack FindPathForwardOnly(Tile startTile, Tile destinationTile, Tile[,] tiles, Cat cat)
+        {
+            openList = new List<Tile>();
+            foreach (Tile n in tiles)
+                n.ResetValues();
+
+            targetTile = destinationTile;
+            currentTile = startTile;
+            currentTile.open = true;
+
+            if(ObjectManager.IndexIsNotOutOfRange(currentTile.gridX - (int)cat.dir.X, currentTile.gridY - (int)cat.dir.Y, tiles))
+                tiles[currentTile.gridX - (int)cat.dir.X, currentTile.gridY - (int)cat.dir.Y].closed = true;
 
             for (int i = 0; i < maxIterations; i++)
             {
@@ -77,11 +102,13 @@ namespace CatAndMouse
 
         static float Heuristic(Tile t)
         {
-            float H;
+            //float H;
 
-            H = Math.Abs(targetTile.gridX - t.gridX) + Math.Abs(targetTile.gridY - t.gridY);    //Manhattan distance
+            //H = Math.Abs(targetTile.gridX - t.gridX) + Math.Abs(targetTile.gridY - t.gridY);    //Manhattan distance
 
-            return H + (targetTile.pos - t.pos).Length() / 1000f; //tiebreaker Euclidean distance
+            //return H + (targetTile.pos - t.pos).Length() / 1000f; //tiebreaker Euclidean distance
+
+            return 0;   //Not using a heuristic is more effective for this game since maps are relatively small and pathfinding through teleporters is more accurate.
         }
 
         static void CloseTile(Tile t)

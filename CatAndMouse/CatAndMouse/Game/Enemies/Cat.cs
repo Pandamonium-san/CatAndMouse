@@ -88,7 +88,7 @@ namespace CatAndMouse
             }
         }
 
-        public void MoveRandomly()  //Select random direction but avoid walking backwards unless it's the only option
+        public void MoveRandomly()  //Select random direction but avoid walking backwards unless it's the only option. Simplest algorithm.
         {
             AddAllPossibleDirections();
             AvoidDirectionReversal();

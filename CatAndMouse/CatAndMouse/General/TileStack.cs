@@ -8,7 +8,7 @@ namespace CatAndMouse
     public class TileStack
     {
         TileNode head;
-        int count;
+        public int count;
 
         public TileStack()
         {
