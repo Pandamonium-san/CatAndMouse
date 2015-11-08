@@ -13,7 +13,6 @@ namespace CatAndMouse
     class ObjectManager
     {
         public static Texture2D tileTexture, mouseTexture, catTexture, cheeseTexture;
-        public static int mapOffset = Tile.tileSize * 2; //Adds two layers of tiles outside screen to avoid null error when checking valid directions
 
         public List<String> mapData;
         public HUD hud;
@@ -29,6 +28,16 @@ namespace CatAndMouse
         public int playerLives;
         public int cheeseEaten;
 
+        public static bool IndexIsNotOutOfRange(int X, int Y, Tile[,] tiles)
+        {
+            if (X + 1 < tiles.GetLength(0)
+            && X - 1 >= 0
+            && Y + 1 < tiles.GetLength(1)
+            && Y - 1 >= 0)
+                return true;
+            else
+                return false;
+        }
 
         public void LoadContent(ContentManager Content)
         {
@@ -69,7 +78,7 @@ namespace CatAndMouse
             {
                 for (int j = 0; j < mapData[i].Length; j++)
                 {
-                    Vector2 position = new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset);
+                    Vector2 position = new Vector2(j * Tile.tileSize, i * Tile.tileSize);   //Used to place objects on a floortile.
 
                     if (mapData[i][j] == 'W')
                         tiles[j, i] = new WallTile(tileTexture, position);
@@ -80,7 +89,8 @@ namespace CatAndMouse
                     else
                     {
                         tiles[j, i] = new FloorTile(tileTexture, position);
-                        position = new Vector2(j * Tile.tileSize - mapOffset + 16, i * Tile.tileSize - mapOffset + 16);
+                        position = new Vector2(j * Tile.tileSize + Tile.tileSize/2.0f, 
+                                                i * Tile.tileSize + Tile.tileSize/2.0f);
                     }
 
                     if (mapData[i][j] == '_')
@@ -124,18 +134,16 @@ namespace CatAndMouse
                 teleporters[i].teleporterId = i;
             }
 
-            mapRec = new Rectangle(0, 0, (tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
-            hud = new HUD((tiles.GetLength(0) - 4) * 32, (tiles.GetLength(1) - 2) * 32);
+            foreach (Cat c in cats)
+                c.SendTargetList(playerMice);
+
+            mapRec = new Rectangle(0, 0, (tiles.GetLength(0)) * Tile.tileSize, (tiles.GetLength(1)) * Tile.tileSize);
+            hud = new HUD(mapRec.Width, mapRec.Height + HUD.hudHeight);
 
             foreach (Tile tile in tiles)
             {
-                tile.CheckSetForkTile(mapData, tiles);
+                tile.FindNeighbors(tiles);
             }
-        }
-
-        public List<Mouse> GetMouseList()
-        {
-            return this.playerMice;
         }
 
         //Teleporter logic
@@ -164,11 +172,7 @@ namespace CatAndMouse
                 m.Update(gameTime, tiles);
                 TeleportUpdate(m);
             }
-            for (int i = 0; i < cats.Count; i++)
-			{
-                if (cats[i] is SmartCat || cats[i] is IntelligentCat)
-                    cats[i].GetTargetList(playerMice);
-            }
+
             foreach (Cat cat in cats)
             {
                 cat.Update(gameTime, tiles);

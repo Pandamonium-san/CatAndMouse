@@ -96,13 +96,13 @@ namespace CatAndMouse
             leftPossible = false;
             downPossible = false;
             upPossible = false;
-            if (gridPosX + 1 <= tiles.GetLength(0) && !tiles[gridPosX + 1, gridPosY].isSolid)
+            if (gridX + 1 < tiles.GetLength(0) && !tiles[gridX + 1, gridY].isSolid)
                 rightPossible = true;
-            if (gridPosX - 1 >= 0 && !tiles[gridPosX - 1, gridPosY].isSolid)
+            if (gridX - 1 >= 0 && !tiles[gridX - 1, gridY].isSolid)
                 leftPossible = true;
-            if (gridPosY + 1 <= tiles.GetLength(1) && !tiles[gridPosX, gridPosY + 1].isSolid)
+            if (gridY + 1 < tiles.GetLength(1) && !tiles[gridX, gridY + 1].isSolid)
                 downPossible = true;
-            if (gridPosY - 1 >= 0 && !tiles[gridPosX, gridPosY - 1].isSolid)
+            if (gridY - 1 >= 0 && !tiles[gridX, gridY - 1].isSolid)
                 upPossible = true;
         }
 

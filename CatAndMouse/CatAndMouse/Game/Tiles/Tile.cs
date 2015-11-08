@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
-    class Tile : GameObject
+    public class Tile : GameObject
     {
         public static int tileSize = 32;
 
@@ -16,9 +16,14 @@ namespace CatAndMouse
         public Nullable<TileType> type = TileType.wall;
 
         //Pathfinder variables
-        public bool visited;
-        public enum PDir { up, down, left, right }
-        public Nullable<PDir> pDir = null;      //parent tile direction
+        public List<Tile> neighbors;
+        public bool open, closed;
+        public float G, H;    //G is cumulative cost, H is heuristic, F is the sum of G and H
+        public float F
+        {
+            get { return G + H; }
+        }
+        public Tile parent;
         public bool isForkTile, isSolid;
 
         public int teleporterId;
@@ -30,41 +35,31 @@ namespace CatAndMouse
             this.hitbox = new Rectangle((int)pos.X, (int)pos.Y, 32, 32);
         }
 
-        public virtual void CheckSetForkTile(List<String> mapData, Tile[,] tiles)
+        public void FindNeighbors(Tile[,] tiles)
         {
-            UpdateGridPos();
-            int connectingTiles = 0;
-            if (pos.X > 0 && pos.X < (mapData[0].Length - 4) * 32 && pos.Y > 0 && pos.Y < (mapData.Count - 4) * 32 && this is FloorTile)
-            {
-                if (tiles[gridPosX + 1, gridPosY] is FloorTile)
-                    connectingTiles++;
-                if (tiles[gridPosX - 1, gridPosY] is FloorTile)
-                    connectingTiles++;
-                if (tiles[gridPosX, gridPosY + 1] is FloorTile)
-                    connectingTiles++;
-                if (tiles[gridPosX, gridPosY - 1] is FloorTile)
-                    connectingTiles++;
-            }
-            if (connectingTiles >= 3)
+            neighbors = new List<Tile>();
+
+            if (gridX + 1 < tiles.GetLength(0))
+                neighbors.Add(tiles[gridX + 1, gridY]);
+            if (gridX - 1 >= 0)
+                neighbors.Add(tiles[gridX - 1, gridY]);
+            if (gridY + 1 < tiles.GetLength(1))
+                neighbors.Add(tiles[gridX, gridY + 1]);
+            if (gridY - 1 >= 0)
+                neighbors.Add(tiles[gridX, gridY - 1]);
+
+            neighbors.RemoveAll(n => n.isSolid);
+            if (neighbors.Count >= 3)
                 isForkTile = true;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public void ResetValues()
         {
-            base.Draw(spriteBatch);
-
-            //DRAW PATHFINDER PATH
-            //if (pDir == PDir.down)
-            //    spriteBatch.DrawString(Game1.hudFont, "v", pos + new Vector2(12, 16), Color.Red);
-
-            //else if (pDir == PDir.right)
-            //    spriteBatch.DrawString(Game1.hudFont, ">", pos + new Vector2(20, 8), Color.Red);
-
-            //else if (pDir == PDir.left)
-            //    spriteBatch.DrawString(Game1.hudFont, "<", pos + new Vector2(4, 8), Color.Red);
-
-            //else if (pDir == PDir.up)
-            //    spriteBatch.DrawString(Game1.hudFont, "^", pos + new Vector2(12, 0), Color.Red);
+            closed = false;
+            open = false;
+            G = 0;
+            H = 0;
+            parent = null;
         }
     }
 }

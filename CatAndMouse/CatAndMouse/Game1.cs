@@ -65,7 +65,7 @@ namespace CatAndMouse
             objectManager.Start(path);
 
             graphics.PreferredBackBufferWidth = objectManager.mapRec.Width;
-            graphics.PreferredBackBufferHeight = objectManager.mapRec.Height;
+            graphics.PreferredBackBufferHeight = objectManager.mapRec.Height + HUD.hudHeight;
             graphics.ApplyChanges();
             gameState = GameState.Playing;
         }
@@ -75,7 +75,7 @@ namespace CatAndMouse
             mapEditor = new MapEditor(28, 31);
             mapEditor.LoadMap(mapPath);
             graphics.PreferredBackBufferWidth = mapEditor.mapRec.Width;
-            graphics.PreferredBackBufferHeight = mapEditor.mapRec.Height + 2 * 32;
+            graphics.PreferredBackBufferHeight = mapEditor.mapRec.Height + EditorHUD.hudHeight;
             graphics.ApplyChanges();
             gameState = GameState.MapEditor;
         }

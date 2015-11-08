@@ -10,7 +10,7 @@ namespace CatAndMouse
     class EditorHUD
     {
         Rectangle rec;
-        int hudHeight = 64;
+        public static int hudHeight = 64;
 
         public List<EditorButton> buttons;
         EditorButton mouse, dumbCat, smartCat, intelligentCat, geniusCat, cheese, wall, floor, teleporter;
@@ -41,11 +41,12 @@ namespace CatAndMouse
             save.Update();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, int placeTool)
         {
             spriteBatch.Draw(Game1.colorTexture, rec, Color.Black);
             foreach (EditorButton b in buttons)
                 b.Draw(spriteBatch);
+            spriteBatch.Draw(Game1.colorTexture, new Rectangle(24 + placeTool * 32 - 16, rec.Y + 32 - 16, 32, 32), Color.Blue * 0.3f);
             save.Draw(spriteBatch);
 
         }

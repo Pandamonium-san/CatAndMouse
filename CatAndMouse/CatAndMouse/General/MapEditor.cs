@@ -15,22 +15,20 @@ namespace CatAndMouse
 
         Rectangle defaultRec = new Rectangle(0, 0, 32, 32);
         public Rectangle mapRec;
-        int mapOffset;
         int arrayX, arrayY;
         enum Place { Mouse, DumbCat, SmartCat, IntelligentCat, GeniusCat, Cheese, Wall, Floor, Teleporter }
         Place placeTool = Place.Wall;
 
         public MapEditor(int x, int y)
         {
-            arrayY = x; // + 4; Adding extra tiles for HUD & off-screen trickery. May help avoid null error. //Might not be neccessary
-            arrayX = y; // + 4;
-            mapOffset = Tile.tileSize * 2;
+            arrayY = x;
+            arrayX = y;
             tiles = new Tile[arrayX, arrayY];
             for (int i = 0; i < arrayX; i++)
             {
                 for (int j = 0; j < arrayY; j++)
                 {
-                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset));
+                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize, i * Tile.tileSize));
                 }
             }
         }
@@ -41,9 +39,10 @@ namespace CatAndMouse
 
             if (mapData == null)
             {
-                mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
-                hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
-                return;
+                mapData = MapHandler.GenerateDefaultMap();
+                //mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
+                //hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
+                //return;
             }
 
             tiles = new Tile[mapData.Count, mapData[0].Length];
@@ -52,7 +51,7 @@ namespace CatAndMouse
             {
                 for (int j = 0; j < mapData[i].Length; j++)
                 {
-                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize - mapOffset, i * Tile.tileSize - mapOffset));
+                    tiles[i, j] = new WallTile(ObjectManager.tileTexture, new Vector2(j * Tile.tileSize, i * Tile.tileSize));
                     if (mapData[i][j] == 'W')
                         tiles[i, j].type = Tile.TileType.wall;
                     else if (mapData[i][j] == '_')
@@ -87,8 +86,8 @@ namespace CatAndMouse
                     }
                 }
             }
-            mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
-            hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
+            mapRec = new Rectangle(0, 0, (tiles.GetLength(1)) * Tile.tileSize, (tiles.GetLength(0)) * Tile.tileSize);
+            hud = new EditorHUD(mapRec.Width, mapRec.Height + EditorHUD.hudHeight);
         }
 
         public void Update(GameWindow window)
@@ -109,7 +108,7 @@ namespace CatAndMouse
             {
                 --placeTool;
                 if ((int)placeTool < 0)
-                    placeTool = (Place)9;
+                    placeTool = (Place)8;
             }
 
             foreach (Tile tile in tiles)
@@ -138,7 +137,7 @@ namespace CatAndMouse
                         spriteBatch.Draw(ObjectManager.mouseTexture, t.pos, defaultRec, Color.White);
                         break;
                     case Tile.TileType.cheese:
-                        spriteBatch.Draw(ObjectManager.cheeseTexture, t.pos + new Vector2(5,5), defaultRec, Color.White, 0f, Vector2.Zero, 0.7f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(ObjectManager.cheeseTexture, t.pos + new Vector2(5,5), defaultRec, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
                         break;
                     case Tile.TileType.dumbcat:
                         spriteBatch.Draw(ObjectManager.catTexture, t.pos, new Rectangle(0, 128, 32, 32), Color.White);
@@ -155,7 +154,7 @@ namespace CatAndMouse
                 }
             }
             spriteBatch.DrawString(Game1.font, placeTool.ToString(), Vector2.Zero, Color.White);
-            hud.Draw(spriteBatch);
+            hud.Draw(spriteBatch, (int)placeTool);
         }
 
     }

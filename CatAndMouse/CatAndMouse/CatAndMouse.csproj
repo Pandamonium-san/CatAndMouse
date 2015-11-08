@@ -73,32 +73,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\GameObject.cs" />
-    <Compile Include="HUD\Button.cs" />
+    <Compile Include="General\TileStack.cs" />
+    <Compile Include="GUI\Button.cs" />
     <Compile Include="Game\Enemies\Cat.cs" />
     <Compile Include="Game\Enemies\DumbCat.cs" />
     <Compile Include="Game\Tiles\Cheese.cs" />
-    <Compile Include="HUD\EditorHUD.cs" />
+    <Compile Include="GUI\EditorHUD.cs" />
     <Compile Include="Game\Tiles\FloorTile.cs" />
     <Compile Include="Game\Actor.cs" />
     <Compile Include="Game\Enemies\GeniusCat.cs" />
-    <Compile Include="HUD\HUD.cs" />
-    <Compile Include="HUD\HUDObject.cs" />
-    <Compile Include="KeyMouseReader.cs" />
-    <Compile Include="MapEditor.cs" />
-    <Compile Include="MapHandler.cs" />
+    <Compile Include="GUI\HUD.cs" />
+    <Compile Include="GUI\HUDObject.cs" />
+    <Compile Include="General\KeyMouseReader.cs" />
+    <Compile Include="General\MapEditor.cs" />
+    <Compile Include="General\MapHandler.cs" />
     <Compile Include="Game\Mouse.cs" />
     <Compile Include="Game\ObjectManager.cs" />
-    <Compile Include="PathFinder.cs" />
+    <Compile Include="General\PathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Game\Enemies\SmartCat.cs" />
     <Compile Include="Game\Enemies\IntelligentCat.cs" />
     <Compile Include="Game\Tiles\TeleporterTile.cs" />
-    <Compile Include="HUD\TextButton.cs" />
-    <Compile Include="HUD\EditorButton.cs" />
+    <Compile Include="GUI\TextButton.cs" />
+    <Compile Include="GUI\EditorButton.cs" />
     <Compile Include="Game\Tiles\Tile.cs" />
-    <Compile Include="HUD\Menu.cs" />
+    <Compile Include="GUI\Menu.cs" />
     <Compile Include="Game\Tiles\WallTile.cs" />
   </ItemGroup>
   <ItemGroup>

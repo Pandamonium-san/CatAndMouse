@@ -24,15 +24,16 @@ namespace CatAndMouse
         public override void Update()
         {
             if (rec.Contains(KeyMouseReader.mousePos))
-                alpha = 1f;
+                color = Color.Red * 0.2f;
             else
-                alpha = 0.5F;
+                color = Color.Transparent;
         }
 
         public override void Draw(SpriteBatch spritebatch)
         {
             base.Draw(spritebatch);
-            spritebatch.Draw(texture, rec, spriteRec, Color.White * alpha);
+            spritebatch.Draw(texture, rec, spriteRec, Color.White);
+            spritebatch.Draw(Game1.colorTexture, rec, spriteRec, color);
         }
     }
 }

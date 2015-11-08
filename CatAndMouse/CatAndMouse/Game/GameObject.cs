@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
-    class GameObject
+    public class GameObject
     {
 
         public Vector2 pos, vectorOrigin;
@@ -18,7 +18,7 @@ namespace CatAndMouse
         protected float scale = 1f;
         protected int offset; //lowers size of hitbox by pixels on all sides
 
-        public int gridPosX, gridPosY;
+        public int gridX, gridY;
 
         public GameObject(Texture2D texture, Vector2 pos)
         {
@@ -39,8 +39,8 @@ namespace CatAndMouse
 
         public void UpdateGridPos()
         {
-            gridPosX = (int)(ObjectManager.mapOffset + pos.X) / 32;
-            gridPosY = (int)(ObjectManager.mapOffset + pos.Y) / 32;
+            gridX = (int)(pos.X) / 32;
+            gridY = (int)(pos.Y) / 32;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

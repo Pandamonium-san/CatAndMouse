@@ -7,20 +7,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
-    class Cat:Actor
+    class Cat : Actor
     {
         protected List<Mouse> playerMice;
         protected List<Direction> possibleDirections;
         protected int spriteOriginX, spriteOriginY;
-        protected int newDir;
+        protected bool canReverseDirection;
 
-        public Cat(Texture2D texture, Vector2 pos):base(texture, pos)
+        public Cat(Texture2D texture, Vector2 pos)
+            : base(texture, pos)
         {
             hitbox = new Rectangle((int)pos.X, (int)pos.Y, spriteRec.Width, spriteRec.Height);
             offset = 10;
             scale = 1f;
             speed = 1.5f;
-            maxMoveTime = Tile.tileSize/speed;
+            maxMoveTime = Tile.tileSize / speed;
             frameWidth = 32;
             frameHeight = 32;
             frameInterval = 150;
@@ -30,35 +31,38 @@ namespace CatAndMouse
 
         public void AvoidDirectionReversal()
         {
-                switch (spriteDirection)        //Removes all instances of reverse direction from list of possible directions
+            if (canReverseDirection)
+                return;
+
+            switch (spriteDirection)        //Removes all instances of reverse direction from list of chosen directions
+            {
+                case Direction.Down:
+                    possibleDirections.RemoveAll(d => d == Direction.Up);
+                    break;
+                case Direction.Up:
+                    possibleDirections.RemoveAll(d => d == Direction.Down);
+                    break;
+                case Direction.Left:
+                    possibleDirections.RemoveAll(d => d == Direction.Right);
+                    break;
+                case Direction.Right:
+                    possibleDirections.RemoveAll(d => d == Direction.Left);
+                    break;
+            }
+            if (possibleDirections.Count == 0)
+            {
+                AddAllPossibleDirections();
+                if (possibleDirections.Count == 1)
                 {
-                    case Direction.Down:
-                        possibleDirections.RemoveAll(d => d == Direction.Up);
-                        break;
-                    case Direction.Up:
-                        possibleDirections.RemoveAll(d => d == Direction.Down);
-                        break;
-                    case Direction.Left:
-                        possibleDirections.RemoveAll(d => d == Direction.Right);
-                        break;
-                    case Direction.Right:
-                        possibleDirections.RemoveAll(d => d == Direction.Left);
-                        break;
+                    Move(possibleDirections[0]);
+                    return;
                 }
-                if(possibleDirections.Count==0)
-                {
-                    AddPossibleDirections();
-                    if (possibleDirections.Count == 1)
-                    {
-                        Move(possibleDirections[0]);
-                        return;
-                    }
-                    else
-                        AvoidDirectionReversal();
-                }
+                else
+                    AvoidDirectionReversal();
+            }
         }
 
-        public void AddPossibleDirections()
+        public void AddAllPossibleDirections()
         {
             if (downPossible)
                 possibleDirections.Add(Direction.Down);
@@ -76,7 +80,7 @@ namespace CatAndMouse
             {
                 if (possibleDirections.Count != 0)
                 {
-                    newDir = Game1.rnd.Next(0, possibleDirections.Count);
+                    int newDir = Game1.rnd.Next(0, possibleDirections.Count);
                     Move(possibleDirections[newDir]);
                 }
                 else
@@ -86,7 +90,7 @@ namespace CatAndMouse
 
         public void MoveRandomly()  //Select random direction but avoid walking backwards unless it's the only option
         {
-            AddPossibleDirections();
+            AddAllPossibleDirections();
             AvoidDirectionReversal();
             PickDirection();
         }
@@ -105,7 +109,7 @@ namespace CatAndMouse
             return closestMouse;
         }
 
-        public void GetTargetList(List<Mouse> playerMice)
+        public void SendTargetList(List<Mouse> playerMice)
         {
             this.playerMice = playerMice;
         }
@@ -113,12 +117,12 @@ namespace CatAndMouse
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteRec = new Rectangle(spriteOriginX + frameWidth * frame, spriteOriginY + frameHeight * (int)spriteDirection, frameWidth, frameHeight);
-            
+
             base.Draw(spriteBatch);
             //spriteBatch.Draw(texture, hitbox, Color.Red);
         }
 
-        public override void CheckValidDirections(Tile [,] tiles)
+        public override void CheckValidDirections(Tile[,] tiles)
         {
             base.CheckValidDirections(tiles);
             possibleDirections = new List<Direction>();

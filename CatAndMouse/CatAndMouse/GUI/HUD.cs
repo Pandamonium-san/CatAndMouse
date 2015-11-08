@@ -10,11 +10,16 @@ namespace CatAndMouse
     class HUD
     {
         Rectangle rec;
-        int hudHeight = 64;
+        public static int hudHeight = 64;
 
         public Button pauseButton;
         HUDObject cheeseEaten, remainingCheese, playerLives;
 
+        /// <summary>
+        /// Displays useful info to the player such as remaining lives and remaining cheese.
+        /// </summary>
+        /// <param name="windowX">Width of game window</param>
+        /// <param name="windowY">Height of game window</param>
         public HUD(int windowX, int windowY)
         {
             rec = new Rectangle(0, windowY - hudHeight, windowX, hudHeight);

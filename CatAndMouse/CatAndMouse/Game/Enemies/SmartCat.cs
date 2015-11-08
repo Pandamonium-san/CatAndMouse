@@ -29,11 +29,6 @@ namespace CatAndMouse
                 possibleDirections.Add(Direction.Up);
 
             AvoidDirectionReversal();
-            if (possibleDirections.Count == 0)
-            {
-                AddPossibleDirections();
-                AvoidDirectionReversal();
-            }
             PickDirection();
         }
 
@@ -42,7 +37,7 @@ namespace CatAndMouse
             if (!moving)
             {
                 UpdateGridPos();
-                if (tiles[gridPosX, gridPosY].isForkTile)
+                if (tiles[gridX, gridY].isForkTile)
                     MoveTowardsTarget(playerMice);
                 else
                     MoveRandomly();

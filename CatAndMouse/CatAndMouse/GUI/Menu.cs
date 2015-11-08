@@ -55,6 +55,7 @@ namespace CatAndMouse
                     playButton.Update();
                     back.Update();
                     edit.Update();
+
                     if (levelButtons[0].ButtonClicked())
                         currentMap = MapHandler.lvl1;
                     else if (levelButtons[1].ButtonClicked())
