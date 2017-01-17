@@ -20,7 +20,7 @@ namespace CatAndMouse
             hitbox = new Rectangle((int)pos.X, (int)pos.Y, spriteRec.Width, spriteRec.Height);
             offset = 10;
             scale = 1f;
-            speed = 1.5f;
+            speed = 1.4f;
             maxMoveTime = Tile.tileSize / speed;
             frameWidth = 32;
             frameHeight = 32;

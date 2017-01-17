@@ -7,6 +7,9 @@ using System.Text;
 
 namespace CatAndMouse
 {
+  /// <summary>
+  /// Moves towards player's estimated future position
+  /// </summary>
     class IntelligentCat : GeniusCat
     {
         public IntelligentCat(Texture2D texture, Vector2 pos)

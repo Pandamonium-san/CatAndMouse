@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
+  /// <summary>
+  /// Tries to move towards the player, doesn't consider walls
+  /// </summary>
     class SmartCat:Cat
     {
         public SmartCat(Texture2D texture, Vector2 pos):base(texture, pos)

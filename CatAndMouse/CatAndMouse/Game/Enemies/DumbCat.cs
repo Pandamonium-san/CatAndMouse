@@ -7,13 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CatAndMouse
 {
+  /// <summary>
+  /// Doesn't chase mouse, runs around randomly. Faster than other cats
+  /// </summary>
     class DumbCat : Cat
     {
         public DumbCat(Texture2D texture, Vector2 pos):base(texture, pos)
         {
             spriteOriginX = 0;
             spriteOriginY = 128;
-            this.speed = 2.3f;
+            this.speed = 2.0f;
             maxMoveTime = Tile.tileSize / speed;
         }
 

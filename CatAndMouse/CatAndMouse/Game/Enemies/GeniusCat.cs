@@ -7,6 +7,9 @@ using System.Text;
 
 namespace CatAndMouse
 {
+  /// <summary>
+  /// Always goes the shortest path to the player, can turn around at intersections
+  /// </summary>
     class GeniusCat : SmartCat
     {
         protected int targetX, targetY;

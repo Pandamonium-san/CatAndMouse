@@ -73,7 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\GameObject.cs" />
+    <Compile Include="General\Agent.cs" />
     <Compile Include="General\TileStack.cs" />
+    <Compile Include="General\Vector2Int.cs" />
     <Compile Include="GUI\Button.cs" />
     <Compile Include="Game\Enemies\Cat.cs" />
     <Compile Include="Game\Enemies\DumbCat.cs" />
