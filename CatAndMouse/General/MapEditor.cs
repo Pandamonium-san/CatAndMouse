@@ -15,7 +15,7 @@ namespace CatAndMouse
 
     Rectangle defaultRec = new Rectangle(0, 0, 32, 32);
     public Rectangle mapRec;
-    int arrayX, arrayY;
+    public int arrayX, arrayY;
     enum Place { Mouse, DumbCat, SmartCat, IntelligentCat, GeniusCat, Cheese, Wall, Floor, Teleporter }
     Place placeTool = Place.Wall;
 
@@ -26,6 +26,9 @@ namespace CatAndMouse
       arrayY = x;
       arrayX = y;
       tiles = new Tile[arrayX, arrayY];
+      mapRec = new Rectangle(0, 0, (tiles.GetLength(1)) * Tile.tileSize, (tiles.GetLength(0)) * Tile.tileSize);
+      hud = new EditorHUD(mapRec.Width, mapRec.Height + EditorHUD.hudHeight);
+
       for (int i = 0; i < arrayX; i++)
       {
         for (int j = 0; j < arrayY; j++)
@@ -41,15 +44,19 @@ namespace CatAndMouse
 
       if (mapData == null)
       {
-        mapData = MapHandler.GenerateDefaultMap();
+        //mapData = MapHandler.GenerateDefaultMap();
         //mapRec = new Rectangle(0, 0, (tiles.GetLength(1) - 4) * 32, (tiles.GetLength(0) - 4) * 32);
         //hud = new EditorHUD(mapRec.Width, mapRec.Height + 2 * 32);
-        //return;
+
+        CreateRandomMap();
+        return;
       }
 
       arrayX = mapData.Count;
       arrayY = mapData[0].Length;
       tiles = new Tile[arrayX, arrayY];
+      mapRec = new Rectangle(0, 0, (tiles.GetLength(1)) * Tile.tileSize, (tiles.GetLength(0)) * Tile.tileSize);
+      hud = new EditorHUD(mapRec.Width, mapRec.Height + EditorHUD.hudHeight);
 
       for (int i = 0; i < mapData.Count; i++)
       {
@@ -90,8 +97,6 @@ namespace CatAndMouse
           }
         }
       }
-      mapRec = new Rectangle(0, 0, (tiles.GetLength(1)) * Tile.tileSize, (tiles.GetLength(0)) * Tile.tileSize);
-      hud = new EditorHUD(mapRec.Width, mapRec.Height + EditorHUD.hudHeight);
     }
 
     public void SetTile(int x, int y, Tile.TileType type)
@@ -101,8 +106,6 @@ namespace CatAndMouse
 
     protected void CreateRandomMap()
     {
-      Random rnd = new Random();
-
       // Initialize
       for (int i = 0; i < arrayX; i++)
       {
@@ -112,18 +115,9 @@ namespace CatAndMouse
         }
       }
 
-      // Create agent
-      agent = new Agent(arrayX, arrayY, this);
-      agent.SetTile(Tile.TileType.teleporter);
-      for (int i = 0; i < 301; i++)
-      {
-        agent.Step();
-      }
-      agent.SetTile(Tile.TileType.teleporter);
-      foreach (Tile t in tiles)
-      {
-        
-      }
+      // Create map agent
+      agent = new Agent(this, 300, 0.3, true, Game1.rnd.Next());
+      agent.Execute();
     }
 
     public void Update(GameWindow window)
@@ -146,7 +140,7 @@ namespace CatAndMouse
         if ((int)placeTool < 0)
           placeTool = (Place)8;
       }
-      if (KeyMouseReader.KeyPressed(Keys.N) && agent != null)
+      if (KeyMouseReader.keyState.IsKeyDown(Keys.N) && agent != null)
       {
         agent.Step();
       }
@@ -199,8 +193,9 @@ namespace CatAndMouse
       spriteBatch.DrawString(Game1.font, placeTool.ToString(), Vector2.Zero, Color.White);
       hud.Draw(spriteBatch, (int)placeTool);
 
+      // Draw agent
       if (agent != null)
-        spriteBatch.Draw(ObjectManager.tileTexture, tiles[agent.pos.X + 1, agent.pos.Y + 1].pos, new Rectangle(32, 0, 32, 32), Color.Red* 0.5f);
+        spriteBatch.Draw(ObjectManager.tileTexture, tiles[agent.pos.X, agent.pos.Y].pos, new Rectangle(32, 0, 32, 32), Color.Red* 0.5f);
     }
 
   }
