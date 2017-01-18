@@ -1,6 +1,43 @@
-/CatAndMouse/CatAndMouse/bin
-/CatAndMouse/CatAndMouse/obj
-/CatAndMouse/CatAndMouse/publish
+x64/
+x86/
+build/
+bld/
+
+# Visual Studio files
+*.pidb
+*.userprefs
+*.[Oo]bj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+*.csproj.csdat
+ipch/
+[Oo]bj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+.vs/
+artifacts/
+
+# Nuget Packages
+**/*.nupkg
 
 # Windows image file caches
 Thumbs.db

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -46,9 +45,9 @@ namespace CatAndMouse
     protected override void LoadContent()
     {
       spriteBatch = new SpriteBatch(GraphicsDevice);
-      font = Content.Load<SpriteFont>(@"font1");
-      titleFont = Content.Load<SpriteFont>(@"titlefont");
-      hudFont = Content.Load<SpriteFont>(@"hudfont");
+      font = Content.Load<SpriteFont>(@"Fonts/font1");
+      titleFont = Content.Load<SpriteFont>(@"Fonts/titlefont");
+      hudFont = Content.Load<SpriteFont>(@"Fonts/hudfont");
 
       objectManager = new ObjectManager();
       menu = new Menu(Window);

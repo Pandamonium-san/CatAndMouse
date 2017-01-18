@@ -41,10 +41,10 @@ namespace CatAndMouse
 
     public void LoadContent(ContentManager Content)
     {
-      tileTexture = Content.Load<Texture2D>(@"tileSpritesheet");
-      mouseTexture = Content.Load<Texture2D>(@"mouse");
-      catTexture = Content.Load<Texture2D>(@"catsprites");
-      cheeseTexture = Content.Load<Texture2D>(@"cheese");
+      tileTexture = Content.Load<Texture2D>(@"Sprites/tileSpritesheet");
+      mouseTexture = Content.Load<Texture2D>(@"Sprites/mouse");
+      catTexture = Content.Load<Texture2D>(@"Sprites/catsprites");
+      cheeseTexture = Content.Load<Texture2D>(@"Sprites/cheese");
     }
 
     public void Start(string mapPath)    //Initialize
