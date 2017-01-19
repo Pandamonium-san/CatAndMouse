@@ -104,7 +104,7 @@ namespace CatAndMouse
       tiles[x, y].type = type;
     }
 
-    protected void CreateRandomMap()
+    public void CreateRandomMap()
     {
       // Initialize
       for (int i = 0; i < arrayX; i++)

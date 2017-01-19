@@ -53,7 +53,6 @@ namespace CatAndMouse
           y = rnd.Next(me.arrayY - 2) + 1;
         }
       }
-      Console.WriteLine(x.ToString() + ", " + y.ToString());
 
       pos = new Vector2Int(x, y);
       dir = new Vector2Int(0, 0);
@@ -92,7 +91,7 @@ namespace CatAndMouse
 
         else if (steps == totalSteps / 2) // guarantees at least 1 cat
           AddCat();
-        else if (steps % 50 == 0 && rnd.NextDouble() < 0.6) // chance to add more cats
+        else if (steps % 50 == 0 && rnd.NextDouble() < 0.8) // chance to add more cats
           AddCat();
         else if (steps % 100 == 0 && rnd.NextDouble() < 0.6) // chance to add teleporter
           SetTile(Tile.TileType.teleporter);

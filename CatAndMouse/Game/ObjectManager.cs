@@ -151,6 +151,21 @@ namespace CatAndMouse
       {
         tp.AddExitToNeighbors();
       }
+
+      // Log map info
+      //string log = "";
+      //int forkTiles = 0;
+      //foreach (Tile tile in tiles)
+      //{
+      //  if (tile.isForkTile)
+      //    forkTiles++;
+      //}
+      //log += forkTiles.ToString();
+      //using (StreamWriter sw = new StreamWriter("log.txt", true))
+      //{
+      //  sw.WriteLine(log);
+      //  sw.Close();
+      //}
     }
 
     //Teleporter logic
